@@ -1,4 +1,5 @@
 const assert = require('node:assert/strict');
+const { exit } = require('node:process');
 const input = require('../common/input');
 
 const findIntersection = (str1, str2) => {
@@ -57,12 +58,32 @@ try {
     throw(err);
 }
 
-const rucksacks = input.get('dec-3', 'input.txt');
-let totalPriority = 0;
-rucksacks.forEach((rucksack) => {
-    const bags = processRucksack(rucksack);
-    const intersection = findIntersection(...bags);
-    totalPriority += getPriority(intersection.pop());
-});
 
-console.log(totalPriority);
+const rucksacks = input.get('dec-3', 'input.txt');
+const puzzle1 = () => {
+    let totalPriority = 0;
+    rucksacks.forEach((rucksack) => {
+        const bags = processRucksack(rucksack);
+        const intersection = findIntersection(...bags);
+        totalPriority += getPriority(intersection.pop());
+    });
+    console.log(`Puzzle 1 answer: ${totalPriority}`);
+}
+
+const puzzle2 = () =>{
+    let totalPriority = 0;
+    let group = [];
+    rucksacks.forEach((rucksack, i) => {
+        group.push(rucksack);
+        if (group.length === 3) {
+            let intersection1 = findIntersection(group[0], group[1]);
+            let badge = findIntersection(group[2], intersection1.join(''));
+            totalPriority += getPriority(badge.pop());
+            group = [];
+        }
+    });
+    console.log(`Puzzle 2 answer is ${totalPriority}`);
+}
+
+puzzle1();
+puzzle2();
