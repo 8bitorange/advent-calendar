@@ -6,23 +6,30 @@ const pairs = input.get('dec-4', 'input.txt');
 const findOverlap = (array1, array2) => {
     let [bottom1, top1] = array1.split('-').map(n => parseInt(n));
     let [bottom2, top2] = array2.split('-').map(n => parseInt(n));
-
-    if(bottom1 <= bottom2 && top1 >= top2) {
-        let range = top2 - bottom2 + 1;
+    range = 0;
+    if(bottom1 <= bottom2) {
+        if (bottom2 > top1) {
+            return {
+                range: [],
+                overlap: false
+            }
+        }
+        range = (top2 <= top1)? top2 - bottom2 + 1 : top1 - bottom2 + 1;
         return {
             range: [...Array(range)].map((item, index) => index + bottom2),
-            fullyContained: true
+            overlap: true
         }
-    } else if (bottom2 <= bottom1 && top2 >= top1) {
-        let range = top1 - bottom1 + 1;
+    } else if (bottom1 > bottom2) {
+        if (bottom1 > top2) {
+            return {
+                range: [],
+                overlap: false
+            }
+        }
+        range = (top1 <= top2)? top1 - bottom1 + 1 : top2 - bottom1 + 1;
         return {
             range: [...Array(range)].map((item, index) => index + bottom1),
-            fullyContained: true
-        }
-    } else {
-        return {
-            range: [],
-            fullyContained: false
+            overlap: true
         }
     }
 };
@@ -51,14 +58,14 @@ try {
     throw(err);
 }
 
-let totalContained = 0;
+let overlapped = 0;
 pairs.forEach((pair) => {
     let [group1,group2] = pair.split(',');
     let overlap = findOverlap(group1, group2);
-    if (overlap.fullyContained) {
-        totalContained += 1;
+    if (overlap.overlap) {
+        overlapped += 1;
     }
 });
 
-console.log(totalContained);
+console.log(overlapped);
 
