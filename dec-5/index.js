@@ -31,7 +31,7 @@ instructions.forEach((item, i) => {
     if(moveRegex.test(item)) {
         let [match, move, from, to] = moveRegex.exec(item);
         move = parseInt(move);
-        let moving = bins[parseInt(from) - 1].splice(0, move).reverse();
+        let moving = bins[parseInt(from) - 1].splice(0, move);
         bins[parseInt(to)-1].unshift(...moving);
     }
 });
